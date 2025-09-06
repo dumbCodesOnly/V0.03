@@ -3,7 +3,7 @@ services:
     name: trading-bot
     env: python
     plan: starter
-    buildCommand: "pip install -r requirements.txt"
+    buildCommand: "pip install -r requirements.txt && python scripts/render_deploy.py"
     startCommand: "gunicorn -c gunicorn_config.py main:app"
     envVars:
       - key: RENDER
@@ -18,19 +18,27 @@ services:
         value: "1"
       - key: WEB_CONCURRENCY
         value: "2"
-      # Database connection will be automatically provided
-      - key: DATABASE_URL
-        fromDatabase:
-          name: trading-bot-postgresql
-          property: connectionString
     autoDeploy: true
     healthCheckPath: /api/health
     region: oregon  # Use Oregon region for better performance
     runtime: python3
+    
+  # PostgreSQL Database (required for position persistence)
+  - type: pserv
+    name: trading-bot-db
+    env: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile.postgres
+    envVars:
+      - key: POSTGRES_DB
+        value: trading_bot
+      - key: POSTGRES_USER
+        value: trading_user
+      - key: POSTGRES_PASSWORD
+        generateValue: true
 
-# Native PostgreSQL Database (more reliable than Docker)
+# Database connection for web service
 databases:
-  - name: trading-bot-postgresql
+  - name: trading-bot-db
     databaseName: trading_bot
     user: trading_user
-    plan: starter
