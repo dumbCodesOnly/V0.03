@@ -2261,12 +2261,30 @@ def get_multiple_smc_signals():
         # Clean up expired signals first
         SMCSignalCache.cleanup_expired()
         
+        # Batch fetch all prices at once to reduce API calls
+        logging.info(f"Batch fetching prices for {len(symbols)} symbols: {symbols}")
+        futures = {}
+        for symbol in symbols:
+            future = price_executor.submit(get_live_market_price, symbol, True)  # prefer_exchange=True
+            futures[future] = symbol
+        
+        # Collect all price results
+        symbol_prices = {}
+        for future in as_completed(futures, timeout=TimeConfig.DEFAULT_API_TIMEOUT):
+            symbol = futures[future]
+            try:
+                price = future.result()
+                symbol_prices[symbol] = price if price else 0
+            except Exception as e:
+                logging.warning(f"Failed to get price for {symbol}: {e}")
+                symbol_prices[symbol] = 0
+        
+        logging.info(f"Successfully fetched {len(symbol_prices)} prices in batch")
+        
         for symbol in symbols:
             try:
-                # Get current price for validation
-                current_price = get_live_market_price(symbol)
-                if not current_price:
-                    current_price = 0
+                # Get current price from batch results
+                current_price = symbol_prices.get(symbol, 0)
                 
                 # Try cached signal first
                 cached_signal = SMCSignalCache.get_valid_signal(symbol, current_price)
