@@ -2351,7 +2351,7 @@
             </li>
             <li class="nav-item">
                 <button class="nav-link" id="smc-tab" data-bs-toggle="tab" data-bs-target="#smc-signals" type="button">
-                    ⚡ Ai
+                    ⚡ AI
                 </button>
             </li>
         </ul>
@@ -2478,7 +2478,7 @@
                 <!-- SMC Status -->
                 <div class="smc-status mb-3">
                     <div class="d-flex justify-content-between align-items-center">
-                        <span class="text-muted">Smart Money Analysis</span>
+                        <span class="text-muted">AI Agent Analysis</span>
                         <div class="d-flex align-items-center gap-2">
                             <div class="live-indicator-dot" id="smc-indicator"></div>
                             <span class="text-muted" id="smc-last-update">Never</span>
@@ -2524,7 +2524,7 @@
                 <div id="smc-signals-list">
                     <div class="loading">
                         <div class="spinner-border spinner-border-sm" role="status"></div>
-                        Loading SMC signals...
+                        Loading AI signals...
                     </div>
                 </div>
             </div>
@@ -6086,7 +6086,7 @@
                 container.innerHTML = `
                     <div class="loading">
                         <div class="spinner-border spinner-border-sm" role="status"></div>
-                        Analyzing Smart Money Concepts...
+                        AI Agent analyzing market structure...
                     </div>
                 `;
             }
@@ -6271,7 +6271,7 @@
             console.log('Refreshing SMC signals from backend (localStorage cache disabled)');
             
             await loadSmcSignals();
-            alert('✅ SMC signals refreshed');
+            alert('✅ AI signals refreshed');
         }
 
         async function viewSignalDetails(symbol) {
@@ -6286,7 +6286,7 @@
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h6 class="modal-title">SMC Analysis - ${symbol}</h6>
+                                        <h6 class="modal-title">AI Analysis - ${symbol}</h6>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body">
